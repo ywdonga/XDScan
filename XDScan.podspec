@@ -27,7 +27,7 @@ TODO: Add long description of the pod here.
   s.author           = { '329720990@qq.com' => 'dongyouweie@126.com' }
   s.source           = { :git => 'https://github.com/ywdonga/XDScan.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
-
+  s.swift_version = '5.5'
   s.ios.deployment_target = '11.0'
 
   s.source_files = 'XDScan/Classes/**/*'
