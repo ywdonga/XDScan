@@ -1,0 +1,6 @@
+framework module XDScan {
+  umbrella header "XDScan-umbrella.h"
+
+  export *
+  module * { export * }
+}

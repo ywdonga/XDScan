@@ -1,0 +1,6 @@
+framework module Pods_XDScan_Tests {
+  umbrella header "Pods-XDScan_Tests-umbrella.h"
+
+  export *
+  module * { export * }
+}
