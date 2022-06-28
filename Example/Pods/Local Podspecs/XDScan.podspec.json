@@ -15,8 +15,9 @@
     "git": "https://github.com/ywdonga/XDScan.git",
     "tag": "0.1.0"
   },
+  "swift_versions": "5.5",
   "platforms": {
-    "ios": "11.0"
+    "ios": "10.0"
   },
   "source_files": "XDScan/Classes/**/*",
   "resource_bundles": {
@@ -28,5 +29,6 @@
     "UIKit",
     "CoreGraphics",
     "AVFoundation"
-  ]
+  ],
+  "swift_version": "5.5"
 }
