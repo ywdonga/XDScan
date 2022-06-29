@@ -8,21 +8,13 @@
 
 import UIKit
 
-class XDScanLineAnimation: UIImageView {
+public class XDScanLineAnimation: UIImageView, XDScanAnimation {
 
     var isAnimationing = false
     var animationRect = CGRect.zero
     
-    func startAnimatingWithRect(animationRect: CGRect, parentView: UIView, image: UIImage?) {
-        self.image = image
-        self.animationRect = animationRect
-        parentView.addSubview(self)
-        
-        isHidden = false
-        isAnimationing = true
-        if image != nil {
-            stepAnimation()
-        }
+    deinit {
+        stopStepAnimating()
     }
     
     @objc func stepAnimation() {
@@ -48,23 +40,25 @@ class XDScanLineAnimation: UIImageView {
             self.perform(#selector(XDScanLineAnimation.stepAnimation), with: nil, afterDelay: 0.3)
         })
     }
+}
+
+extension XDScanLineAnimation {
     
-    func stopStepAnimating() {
+    public func stopStepAnimating() {
         isHidden = true
         isAnimationing = false
     }
     
-    public static func instance() -> XDScanLineAnimation {
-        return XDScanLineAnimation()
+    public func startAnimatingWithRect(animationRect: CGRect) {
+        self.animationRect = animationRect
+        isHidden = false
+        isAnimationing = true
+        if image != nil {
+            stepAnimation()
+        }
     }
     
-    deinit {
-        stopStepAnimating()
-    }
-
 }
-
-
 
 
 

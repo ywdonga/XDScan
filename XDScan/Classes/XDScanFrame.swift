@@ -8,33 +8,33 @@
 
 import UIKit
 
-open class XDScanFrame: UIView {
+public class XDScanFrame: UIView {
     
-    var length: CGFloat = 25.0 {
+    public var length: CGFloat = 25.0 {
         didSet {
             setNeedsDisplay()
         }
     }
     
-    var color: UIColor = .green {
+    public var color: UIColor = .green {
         didSet {
             setNeedsDisplay()
         }
     }
     
-    var radius: CGFloat = 10.0 {
+    public var radius: CGFloat = 10.0 {
         didSet {
             setNeedsDisplay()
         }
     }
     
-    var thickness: CGFloat = 5.0 {
+    public var thickness: CGFloat = 5.0 {
         didSet {
             setNeedsDisplay()
         }
     }
     
-    override init(frame: CGRect) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor.clear
     }

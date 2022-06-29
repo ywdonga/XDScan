@@ -13,8 +13,6 @@ import AVFoundation
 public class XDScan: NSObject {
     /// 配置
     private var config: XDScanConfig
-    /// 线条动画
-    private let lineAnimation = XDScanLineAnimation.instance()
 
     private let captureSession = AVCaptureSession()
     private let dataOutput = AVCaptureMetadataOutput()
@@ -86,7 +84,7 @@ public class XDScan: NSObject {
         addHintTextLayer(maskLayer: maskLayer)
         /// 添加动画
         starLineAnimation(cropRect: roundViewFrame)
-        /// 添加四角
+        /// 添加添加边框
         addRoundCornerFrame(atView: atView)
     }
     
@@ -109,31 +107,29 @@ public class XDScan: NSObject {
         atView.layer.insertSublayer(hintTextLayer, above: maskLayer)
     }
     
-    /// 添加四角
+    /// 添加边框
     private func addRoundCornerFrame(atView: UIView) {
         let width: CGFloat = atView.frame.size.width * config.maskScale + config.thickness * 2
         let height: CGFloat = width
         let roundViewFrame = CGRect(origin: CGPoint(x: atView.frame.midX - width/2,
                                                     y: atView.frame.midY - height/2),
                                     size: CGSize(width: width, height: width))
-        let qrFramedView = XDScanFrame(frame: roundViewFrame)
-        qrFramedView.thickness = config.thickness
-        qrFramedView.length = config.length
-        qrFramedView.radius = config.radius
-        qrFramedView.color = config.color
-        qrFramedView.autoresizingMask = UIView.AutoresizingMask(rawValue: UInt(0.0))
-        atView.addSubview(qrFramedView)
+        guard let frameView = dataSource?.frameView(rect: roundViewFrame) else {
+            return
+        }
+        frameView.autoresizingMask = UIView.AutoresizingMask(rawValue: UInt(0.0))
+        atView.addSubview(frameView)
     }
     
     /// 扫码动画
     /// - Parameter cropRect: 位置大小
     private func starLineAnimation(cropRect: CGRect) {
-        guard let atView = dataSource?.previewView() else {
+        guard let atView = dataSource?.previewView(),
+              let animationView = dataSource?.animationView(rect: cropRect) else {
             return
         }
-        lineAnimation.startAnimatingWithRect(animationRect: cropRect,
-                                             parentView: atView,
-                                             image: config.animationImage)
+        atView.addSubview(animationView)
+        animationView.startAnimatingWithRect(animationRect: cropRect)
     }
     
     /// 开始扫码
@@ -212,11 +208,28 @@ public enum XDScanEvent {
 
 // MARK: ----- 代理
 public protocol XDScanDataSource: AnyObject {
+    /// 相机预览所在的View
+    /// - Returns: view
     func previewView() -> UIView
+    
+    /// 边框View
+    /// - Parameter rect: 边框大小位置
+    /// - Returns: 边框view
+    func frameView(rect: CGRect) -> UIView?
+    
+    /// 动画View
+    /// - Parameter rect: 动画大小位置
+    /// - Returns: 动画view
+    func animationView(rect: CGRect) -> XDScanAnimation
 }
 
 public protocol XDScanDelegate: AnyObject {
     func qrScanEvent(_ event:XDScanEvent)
+}
+
+public protocol XDScanAnimation: UIView {
+    func startAnimatingWithRect(animationRect: CGRect)
+    func stopStepAnimating()
 }
 
 // MARK: ----- 识别图片中二维码

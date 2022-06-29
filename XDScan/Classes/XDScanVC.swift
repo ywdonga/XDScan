@@ -45,7 +45,18 @@ extension XDScanVC: XDScanDataSource, XDScanDelegate {
         view
     }
     
+    public func frameView(rect: CGRect) -> UIView? {
+        let qrFramedView = XDScanFrame(frame: rect)
+        qrFramedView.thickness = config.thickness
+        qrFramedView.length = config.length
+        qrFramedView.radius = config.radius
+        qrFramedView.color = config.color
+        return qrFramedView
+    }
     
+    public func animationView(rect: CGRect) -> XDScanAnimation {
+        XDScanLineAnimation()
+    }
     
     public func qrScanEvent(_ event: XDScanEvent) {
         eventBlock?(event)
