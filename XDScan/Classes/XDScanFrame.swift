@@ -1,9 +1,9 @@
 //
-//  XDScanWrapper.swift
+//  XDScanFrame.swift
 //  XDScan
 //
-//  Created by lbxia on 22/06/28.
-//  Copyright © 2022年 dyw. All rights reserved.
+//  Created by dyw on 22/06/28.
+//  Copyright © 2022年 dongyouwei. All rights reserved.
 //
 
 import UIKit

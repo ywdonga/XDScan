@@ -1,9 +1,9 @@
 //
-//  XDScanWrapper.swift
+//  XDScanConfig.swift
 //  XDScan
 //
-//  Created by lbxia on 22/06/28.
-//  Copyright © 2022年 dyw. All rights reserved.
+//  Created by dyw on 22/06/28.
+//  Copyright © 2022年 dongyouwei. All rights reserved.
 //
 
 import UIKit
@@ -34,29 +34,13 @@ public struct XDScanConfig {
     /// 镂空周边背景颜色
     public var maskBgColor: UIColor = UIColor(white: 0, alpha: 0.5)
     /// 动画图片
-    public var animationImage: UIImage = XDTools.getBundleImg(with: "xdscan_animation_line")!
+    public var animationImage: UIImage = XDScan.getBundleImg(with: "xdscan_animation_line")!
 }
 
 extension XDScanConfig {
     
     public static var defaultConfig: XDScanConfig {
         XDScanConfig(title: "扫一扫",hint: "对准需要识别的二维码")
-    }
-}
-
-class XDTools {
-    
-    static var bundle: Bundle = {
-        let bundle = Bundle.init(path: Bundle.init(for: XDTools.self).path(forResource: "XDScan", ofType: "bundle", inDirectory: nil)!)
-        return bundle!
-    }()
-       
-    public static func getBundleImg(with name: String) -> UIImage? {
-        var image = UIImage(named: name, in: bundle, compatibleWith: nil)
-        if image == nil {
-            image = UIImage(named: name)
-        }
-        return image
     }
 }
 

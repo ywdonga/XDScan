@@ -1,9 +1,9 @@
 //
-//  LBXScanLineAnimation.swift
-//  swiftScan
+//  XDScanLineAnimation.swift
+//  XDScan
 //
-//  Created by lbxia on 15/12/9.
-//  Copyright © 2015年 xialibing. All rights reserved.
+//  Created by dyw on 22/06/28.
+//  Copyright © 2022年 dongyouwei. All rights reserved.
 //
 
 import UIKit
