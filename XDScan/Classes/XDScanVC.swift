@@ -56,7 +56,7 @@ extension XDScanVC: XDScanDataSource, XDScanDelegate {
     }
     
     public func animationView(rect: CGRect) -> XDScanAnimation? {
-        XDScanLineAnimation()
+        XDScanLineAnimation(image: config.animationImage)
     }
     
     public func qrScanEvent(_ event: XDScanEvent) {
