@@ -192,6 +192,27 @@ extension XDScan: AVCaptureMetadataOutputObjectsDelegate {
     }
 }
 
+extension XDScan {
+    
+    // 相机权限
+    public static func cameraAuth(_ handler: @escaping ((Bool) -> Void)) {
+        AVCaptureDevice.requestAccess(for: .video) { result in
+            DispatchQueue.main.async {
+                var selected: Bool = false
+                if result {
+                    // 允许访问相机
+                    selected = true
+                } else {
+                    // 不允许访问相机
+                    selected = false
+                }
+                handler(selected)
+            }
+        }
+    }
+    
+}
+
 // MARK: ----- 错误枚举
 public enum XDScanError: Error {
     case inputFailed
@@ -220,7 +241,7 @@ public protocol XDScanDataSource: AnyObject {
     /// 动画View
     /// - Parameter rect: 动画大小位置
     /// - Returns: 动画view
-    func animationView(rect: CGRect) -> XDScanAnimation
+    func animationView(rect: CGRect) -> XDScanAnimation?
 }
 
 public protocol XDScanDelegate: AnyObject {
@@ -237,7 +258,7 @@ extension UIImage {
     
     /// 解析二维码
     /// - Returns: 二维码内容
-    func parseQRCode() -> String? {
+    public func parseQRCode() -> String? {
         guard let image = CIImage(image: self) else { return nil }
         let detector = CIDetector(ofType: CIDetectorTypeQRCode,
                                   context: nil,

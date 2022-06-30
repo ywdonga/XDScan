@@ -25,6 +25,7 @@ public class XDScanVC: UIViewController {
     
     public override func viewDidLoad() {
         view.backgroundColor = UIColor.white
+        title = config.title
         scan.addViedoPreviewLayer()
         scan.startScanning()
     }
@@ -54,7 +55,7 @@ extension XDScanVC: XDScanDataSource, XDScanDelegate {
         return qrFramedView
     }
     
-    public func animationView(rect: CGRect) -> XDScanAnimation {
+    public func animationView(rect: CGRect) -> XDScanAnimation? {
         XDScanLineAnimation()
     }
     

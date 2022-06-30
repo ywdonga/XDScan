@@ -21,6 +21,7 @@ class ScanVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = UIColor.white
         /// 添加预览
         scan.addViedoPreviewLayer()
         /// 启动相机
@@ -48,7 +49,7 @@ extension ScanVC: XDScanDataSource, XDScanDelegate {
         return qrFramedView
     }
     
-    func animationView(rect: CGRect) -> XDScanAnimation {
+    func animationView(rect: CGRect) -> XDScanAnimation? {
         XDScanLineAnimation(image: config.animationImage)
     }
     

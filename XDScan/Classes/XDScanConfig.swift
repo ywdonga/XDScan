@@ -40,7 +40,7 @@ public struct XDScanConfig {
 extension XDScanConfig {
     
     public static var defaultConfig: XDScanConfig {
-        XDScanConfig(title: "扫一扫",hint: "对准需要识别的二维码")
+        XDScanConfig(hint: "请扫描二维码")
     }
 }
 
