@@ -15,10 +15,18 @@ public struct XDScanConfig {
     /// 提示文案
     public var hint: String?
     /// 提示文案字体大小
-    public var hintSize: CGFloat = 18
+    public var hintSize: CGFloat = 14
     /// 提示文案颜色
-    public var hintColor: UIColor = UIColor.white.withAlphaComponent(0.8)
-
+    public var hintColor: UIColor = UIColor.white
+    
+    /// 提示文案相对于扫码区的边距
+    public var hintEdge: CGFloat = 40
+    /// 提示文案是否在扫码区域的上方，否则在下方
+    public var hintIsTop: Bool = false
+    
+    /// 扫码区Y轴偏移
+    public var offsetY: CGFloat = -34
+    
     /// 四角线条长度
     public var length: CGFloat = 20
     /// 四角线条颜色

@@ -70,7 +70,7 @@ public class XDScan: NSObject {
         /// 添加镂空样式
         let scanFrameWidth: CGFloat  = atView.frame.size.width * config.maskScale
         let roundViewFrame = CGRect(origin: CGPoint(x: atView.frame.midX - scanFrameWidth/2,
-                                                    y: atView.frame.midY - scanFrameWidth/2),
+                                                    y: atView.frame.midY - scanFrameWidth/2 + config.offsetY),
                                     size: CGSize(width: scanFrameWidth, height: scanFrameWidth))
         let maskLayer = CAShapeLayer()
         maskLayer.frame = atView.bounds
@@ -81,7 +81,7 @@ public class XDScan: NSObject {
         maskLayer.fillRule = CAShapeLayerFillRule.evenOdd
         atView.layer.insertSublayer(maskLayer, above: videoPreviewLayer)
         /// 添加提示文字
-        addHintTextLayer(maskLayer: maskLayer)
+        addHintTextLayer(maskLayer: maskLayer, cropRect: roundViewFrame)
         /// 添加动画
         starLineAnimation(cropRect: roundViewFrame)
         /// 添加添加边框
@@ -89,7 +89,7 @@ public class XDScan: NSObject {
     }
     
     /// 添加提示文字
-    private func addHintTextLayer(maskLayer: CAShapeLayer) {
+    private func addHintTextLayer(maskLayer: CAShapeLayer, cropRect: CGRect) {
         guard let atView = dataSource?.previewView() else {
             return
         }
@@ -99,10 +99,12 @@ public class XDScan: NSObject {
         hintTextLayer.string = hint
         hintTextLayer.alignmentMode = CATextLayerAlignmentMode.center
         hintTextLayer.contentsScale = UIScreen.main.scale
+        let hitHeight = config.hintSize + 4
+        let hintY = config.hintIsTop ? (cropRect.minY - config.hintEdge - hitHeight) : (cropRect.maxY + config.hintEdge)
         hintTextLayer.frame = CGRect(x: 0,
-                                     y: atView.frame.midY - atView.frame.size.height/4 - 62,
+                                     y: hintY,
                                      width: atView.frame.size.width,
-                                     height: config.hintSize + 4)
+                                     height: hitHeight)
         hintTextLayer.foregroundColor = config.hintColor.cgColor
         atView.layer.insertSublayer(hintTextLayer, above: maskLayer)
     }
@@ -112,7 +114,7 @@ public class XDScan: NSObject {
         let width: CGFloat = atView.frame.size.width * config.maskScale + config.thickness * 2
         let height: CGFloat = width
         let roundViewFrame = CGRect(origin: CGPoint(x: atView.frame.midX - width/2,
-                                                    y: atView.frame.midY - height/2),
+                                                    y: atView.frame.midY - height/2 + config.offsetY),
                                     size: CGSize(width: width, height: width))
         guard let frameView = dataSource?.frameView(rect: roundViewFrame) else {
             return
