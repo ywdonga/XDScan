@@ -30,6 +30,16 @@ public class XDScanVC: UIViewController {
         scan.startScanning()
     }
     
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        scan.startScanning()
+    }
+    
+    public override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        scan.stopScanning()
+    }
+    
     deinit {
         scan.stopScanning()
     }
@@ -60,6 +70,13 @@ extension XDScanVC: XDScanDataSource, XDScanDelegate {
     }
     
     public func qrScanEvent(_ event: XDScanEvent) {
+        if case .scanFinish(_) = event {
+            if navigationController != nil {
+                navigationController?.popViewController(animated: true)
+            } else {
+                dismiss(animated: true)
+            }
+        }
         eventBlock?(event)
     }
 }
