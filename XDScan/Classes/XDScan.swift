@@ -11,8 +11,9 @@ import CoreGraphics
 import AVFoundation
 
 public class XDScan: NSObject {
-    /// 配置
+    /// 基础配置
     private var config: XDScanConfig
+    /// 初始焦距，默认1
     private var factor = 1.0
     private let captureSession = AVCaptureSession()
     private let dataOutput = AVCaptureMetadataOutput()
@@ -20,7 +21,16 @@ public class XDScan: NSObject {
     public weak var dataSource: XDScanDataSource?
     public weak var delegate: XDScanDelegate?
     public var eventBlock: ((XDScanEvent)->())?
+    /// 是否开启自动调整焦距
     public var factorEnable = true
+    /// 自动调焦间隔时间，默认与扫码动画时间一致
+    public var factorLoopTime = 1.7
+    
+    /// 初始化
+    /// - Parameters:
+    ///   - config: 基础配置
+    ///   - dataSource: UI配置
+    ///   - delegate: 扫码结果代理
     public init(config: XDScanConfig,
                 dataSource: XDScanDataSource,
                 delegate: XDScanDelegate? = nil) {
@@ -171,14 +181,27 @@ public class XDScan: NSObject {
 
 extension XDScan {
     
-    func enableFocus(_ enable: Bool) {
+    /// 设置自动对焦是否开启
+    /// - Parameter enable: 是否开启自动对焦
+    private func enableFocus(_ enable: Bool) {
         XDScan.cancelPreviousPerformRequests(withTarget: self)
-        guard factorEnable, enable else { return }
+        guard factorEnable, enable else { /// 如果上次有变焦，需要重置
+            guard let device = defaultDevice, factor > 1 else { return }
+            factor = 1
+            do {
+                try device.lockForConfiguration()
+                device.ramp(toVideoZoomFactor: factor, withRate: 1.0)
+                device.unlockForConfiguration()
+            } catch {
+                print("lockForConfiguration error")
+            }
+            return
+        }
         factor = 1
         tofocus()
     }
     
-    // 对焦
+    // 循环自动对焦
    @objc func tofocus() {
         guard let device = defaultDevice else { return }
        factor += 0.3
@@ -199,7 +222,7 @@ extension XDScan {
         } catch {
             print("lockForConfiguration error")
         }
-       perform(#selector(tofocus), with: self, afterDelay: 1.7)
+       perform(#selector(tofocus), with: self, afterDelay: factorLoopTime)
     }
     
 }
