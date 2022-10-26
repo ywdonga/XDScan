@@ -13,14 +13,14 @@ import AVFoundation
 public class XDScan: NSObject {
     /// 配置
     private var config: XDScanConfig
-
+    private var factor = 1.0
     private let captureSession = AVCaptureSession()
     private let dataOutput = AVCaptureMetadataOutput()
     
     public weak var dataSource: XDScanDataSource?
     public weak var delegate: XDScanDelegate?
     public var eventBlock: ((XDScanEvent)->())?
-    
+    public var factorEnable = true
     public init(config: XDScanConfig,
                 dataSource: XDScanDataSource,
                 delegate: XDScanDelegate? = nil) {
@@ -138,10 +138,12 @@ public class XDScan: NSObject {
     public func startScanning() {
         guard !captureSession.isRunning else { return }
         captureSession.startRunning()
+        enableFocus(true)
     }
     
     /// 停止扫码
     public func stopScanning() {
+        enableFocus(false)
         captureSession.stopRunning()
     }
     
@@ -164,6 +166,41 @@ public class XDScan: NSObject {
         layer.videoGravity = AVLayerVideoGravity.resizeAspectFill
         return layer
     }()
+    
+}
+
+extension XDScan {
+    
+    func enableFocus(_ enable: Bool) {
+        XDScan.cancelPreviousPerformRequests(withTarget: self)
+        guard factorEnable, enable else { return }
+        factor = 1
+        tofocus()
+    }
+    
+    // 对焦
+   @objc func tofocus() {
+        guard let device = defaultDevice else { return }
+       factor += 0.3
+        do {
+            let focusPoint = CGPoint(x: 0.5, y: 0.5)
+            try device.lockForConfiguration()
+            device.ramp(toVideoZoomFactor: factor, withRate: 1.0)
+            if device.isFocusModeSupported(.autoFocus) {
+                device.focusPointOfInterest = focusPoint
+                device.focusMode = .autoFocus
+            }
+            
+            if device.isExposureModeSupported(.autoExpose) {
+                device.exposurePointOfInterest = focusPoint
+                device.exposureMode = .autoExpose
+            }
+            device.unlockForConfiguration()
+        } catch {
+            print("lockForConfiguration error")
+        }
+       perform(#selector(tofocus), with: self, afterDelay: 1.7)
+    }
     
 }
 
