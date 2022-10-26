@@ -25,7 +25,8 @@ public class XDScan: NSObject {
     public var factorEnable = true
     /// 自动调焦间隔时间，默认与扫码动画时间一致
     public var factorLoopTime = 1.7
-    
+    /// 每次增加倍数
+    public var stepMultiple = 0.3
     /// 初始化
     /// - Parameters:
     ///   - config: 基础配置
@@ -204,7 +205,7 @@ extension XDScan {
     // 循环自动对焦
    @objc func tofocus() {
         guard let device = defaultDevice else { return }
-       factor += 0.3
+       factor += stepMultiple
         do {
             let focusPoint = CGPoint(x: 0.5, y: 0.5)
             try device.lockForConfiguration()
