@@ -204,8 +204,11 @@ extension XDScan {
     
     // 循环自动对焦
    @objc func tofocus() {
-       guard let device = defaultDevice, factor < 2.5 else { return }
+       guard let device = defaultDevice else { return }
        factor += stepMultiple
+       if factor > 3 {
+           factor = 3
+       }
         do {
             let focusPoint = CGPoint(x: 0.5, y: 0.5)
             try device.lockForConfiguration()
