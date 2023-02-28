@@ -27,6 +27,7 @@ public struct XDScanConfig {
     /// 扫码区Y轴偏移
     public var offsetY: CGFloat = -34
     
+    public var isCornerInside: Bool = false
     /// 四角线条长度
     public var length: CGFloat = 20
     /// 四角线条颜色
@@ -42,7 +43,7 @@ public struct XDScanConfig {
     /// 镂空周边背景颜色
     public var maskBgColor: UIColor = UIColor(white: 0, alpha: 0.5)
     /// 动画图片
-    public var animationImage: UIImage = XDScan.getBundleImg(with: "xdscan_animation_line")!
+    public var animationImage: UIImage? = XDScan.getBundleImg(with: "xdscan_animation_line")
 }
 
 extension XDScanConfig {

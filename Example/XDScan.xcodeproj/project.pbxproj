@@ -216,13 +216,13 @@
 				TargetAttributes = {
 					607FACCF1AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
-						DevelopmentTeam = 42CJZL97T8;
+						DevelopmentTeam = 23M2P3R2AH;
 						LastSwiftMigration = 0900;
 						ProvisioningStyle = Manual;
 					};
 					607FACE41AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
-						DevelopmentTeam = D4D6AYNVN5;
+						DevelopmentTeam = 23M2P3R2AH;
 						LastSwiftMigration = 0900;
 						ProvisioningStyle = Manual;
 						TestTargetID = 607FACCF1AFB9204008FA782;
@@ -507,13 +507,15 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = 42CJZL97T8;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 23M2P3R2AH;
 				INFOPLIST_FILE = XDScan/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.XDScan--Example";
+				PRODUCT_BUNDLE_IDENTIFIER = com.kfang.tuokeben;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = MyCommonDev;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = com.kfang.tuokeben.dev;
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 5.0;
 			};
@@ -526,13 +528,15 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = 42CJZL97T8;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 23M2P3R2AH;
 				INFOPLIST_FILE = XDScan/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.XDScan--Example";
+				PRODUCT_BUNDLE_IDENTIFIER = com.kfang.tuokeben;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = MyCommonDev;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = com.kfang.tuokeben.dev;
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 5.0;
 			};
@@ -546,6 +550,8 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = D4D6AYNVN5;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 23M2P3R2AH;
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = 23M2P3R2AH;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 					"$(inherited)",

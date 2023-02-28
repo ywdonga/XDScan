@@ -34,6 +34,12 @@ public class XDScanFrame: UIView {
         }
     }
     
+    public var isCornerInside: Bool = false {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
+    
     public override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor.clear
@@ -49,7 +55,8 @@ public class XDScanFrame: UIView {
         
         color.set()
         
-        let XAdjustment = thickness / 2
+        let offset: CGFloat = isCornerInside ? thickness : 0
+        let XAdjustment = thickness / 2 + offset
         let path = UIBezierPath()
         
         // Top left

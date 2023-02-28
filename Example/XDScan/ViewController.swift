@@ -10,10 +10,15 @@ import UIKit
 import XDScan
 
 class ViewController: UITableViewController {
+    let tv = UITextView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
+
+        tv.frame = CGRect(x: 0, y: view.bounds.height - 200, width: view.bounds.width, height: 200)
+        view.addSubview(tv)
+        tv.backgroundColor = UIColor.gray.withAlphaComponent(0.6)
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -26,6 +31,10 @@ class ViewController: UITableViewController {
             navigationController?.pushViewController(vc, animated: true)
         case 1:
             let vc = ScanVC()
+            vc.callback = {
+                [weak self] (code) in
+                self?.tv.text = code
+            }
             navigationController?.pushViewController(vc, animated: true)
         default: break
         }
