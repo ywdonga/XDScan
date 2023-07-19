@@ -16,6 +16,11 @@ public class XDScan: NSObject {
     /// 初始焦距，默认1
     private var factor = 1.0
     private let captureSession = AVCaptureSession()
+    
+    public var isRunning: Bool {
+        return captureSession.isRunning
+    }
+    
     private let dataOutput = AVCaptureMetadataOutput()
     
     public weak var dataSource: XDScanDataSource?
@@ -64,13 +69,7 @@ public class XDScan: NSObject {
         }
         captureSession.sessionPreset = .hd1920x1080
         captureSession.addOutput(dataOutput)
-//        dataOutput.metadataObjectTypes = dataOutput.availableMetadataObjectTypes
-        if #available(iOS 13.0, *) {
-            dataOutput.metadataObjectTypes = [.qr, .salientObject]
-        } else {
-            // Fallback on earlier versions
-            dataOutput.metadataObjectTypes = [.qr]
-        }
+        dataOutput.metadataObjectTypes = [.qr]
         dataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
     }
     
@@ -156,10 +155,12 @@ public class XDScan: NSObject {
     public func startScanning() {
         guard !captureSession.isRunning else { return }
         captureSession.startRunning()
+        enableFocus(true)
     }
     
     /// 停止扫码
     public func stopScanning() {
+        enableFocus(false)
         captureSession.stopRunning()
     }
     
@@ -187,58 +188,60 @@ public class XDScan: NSObject {
 
 extension XDScan {
     
-    func autoFocusAndZoomWith(metaObject: AVMetadataObject) {
-        guard let device = defaultDevice else { return }
-        do {
-            try device.lockForConfiguration()
-            let focusPoint = CGPoint(x: metaObject.bounds.midX, y: metaObject.bounds.midY)
-            // 调整焦点
-            if device.isFocusPointOfInterestSupported && device.isFocusModeSupported(.autoFocus) {
-               
-                device.focusPointOfInterest = focusPoint
-            }
-            // 调整曝光
-            if device.isExposurePointOfInterestSupported && device.isExposureModeSupported(.autoExpose) {
-                device.exposurePointOfInterest = focusPoint
-                device.exposureMode = .autoExpose
-            }
-            
-            // 调整缩放
-            if !device.isRampingVideoZoom {
-                let curr = device.videoZoomFactor
-                var new = curr
-                let v = (metaObject.bounds.origin.x - 0.2) / 0.2
-                print("zoom 变化值：\(v)")
-                new = curr + v
-                new = new < 1 ? 1 : new
-                print("zoom val: \(new)")
-                new = new <= device.activeFormat.videoMaxZoomFactor ? new : 1
-                device.ramp(toVideoZoomFactor: new, withRate: 50)
-                
+    /// 设置自动对焦是否开启
+    /// - Parameter enable: 是否开启自动对焦
+    private func enableFocus(_ enable: Bool) {
+        XDScan.cancelPreviousPerformRequests(withTarget: self)
+        guard factorEnable, enable else { /// 如果上次有变焦，需要重置
+            guard let device = defaultDevice, factor > 1 else { return }
+            factor = 1
+            do {
+                try device.lockForConfiguration()
+                device.ramp(toVideoZoomFactor: factor, withRate: 1.0)
                 device.unlockForConfiguration()
+            } catch {
+                print("lockForConfiguration error")
             }
-            
-        } catch {
-            print("\(error)")
+            return
         }
-        
+        factor = 1
+//        tofocus()
     }
+    
+    // 循环自动对焦
+//   @objc func tofocus() {
+//       guard let device = defaultDevice else { return }
+//       factor += stepMultiple
+//       if factor > 3 {
+//           factor = 3
+//       }
+//        do {
+//            let focusPoint = CGPoint(x: 0.5, y: 0.5)
+//            try device.lockForConfiguration()
+//            device.ramp(toVideoZoomFactor: factor, withRate: 1.0)
+//            if device.isFocusModeSupported(.autoFocus) {
+//                device.focusPointOfInterest = focusPoint
+//                device.focusMode = .autoFocus
+//            }
+//
+//            if device.isExposureModeSupported(.autoExpose) {
+//                device.exposurePointOfInterest = focusPoint
+//                device.exposureMode = .autoExpose
+//            }
+//            device.unlockForConfiguration()
+//        } catch {
+//            print("lockForConfiguration error")
+//        }
+//       perform(#selector(tofocus), with: self, afterDelay: factorLoopTime)
+//    }
+    
 }
 
 extension XDScan: AVCaptureMetadataOutputObjectsDelegate {
     
     public func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
-        
-        let canReadList = metadataObjects.compactMap({ $0 as? AVMetadataMachineReadableCodeObject })
-        guard let metadataObj = canReadList.first,
+        guard let metadataObj = metadataObjects.first as? AVMetadataMachineReadableCodeObject,
               metadataObj.type == AVMetadataObject.ObjectType.qr else {
-            
-            if #available(iOS 13.0, *) {
-                if let salientObj = metadataObjects.first as? AVMetadataSalientObject {
-                    print("-- \(salientObj)")
-                    autoFocusAndZoomWith(metaObject: salientObj)
-                }
-            }
             return
         }
         guard let atView = dataSource?.previewView() else {

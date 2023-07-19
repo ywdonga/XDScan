@@ -1,6 +1,6 @@
 {
   "name": "XDScan",
-  "version": "0.1.6",
+  "version": "0.1.8",
   "summary": "A short description of XDScan.",
   "description": "TODO: Add long description of the pod here.",
   "homepage": "https://github.com/ywdonga/XDScan",
@@ -13,7 +13,7 @@
   },
   "source": {
     "git": "https://github.com/ywdonga/XDScan.git",
-    "tag": "0.1.6"
+    "tag": "0.1.8"
   },
   "swift_versions": "5.5",
   "platforms": {
